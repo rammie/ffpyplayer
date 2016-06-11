@@ -98,6 +98,8 @@ build_script:
     7z x "SDL2_mixer-devel-$env:SDL_MIXER_VERSION-mingw.tar"
 
     Check-Error
+    
+    dir .\ -s -n
 
 
     if ($env:BITTNESS -eq "64") {
