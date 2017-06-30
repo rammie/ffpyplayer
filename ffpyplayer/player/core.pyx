@@ -1616,6 +1616,7 @@ cdef class VideoState(object):
         cdef int error
         cdef int next_sample_rate_idx = next_sample_rates_len - 1
 
+        av_log(NULL, AV_LOG_FATAL, b"1");
         env = SDL_getenv(b"SDL_AUDIO_CHANNELS")
         if env != NULL:
             wanted_nb_channels = atoi(env)
@@ -1625,14 +1626,15 @@ cdef class VideoState(object):
             wanted_channel_layout = av_get_default_channel_layout(wanted_nb_channels)
             wanted_channel_layout &= ~AV_CH_LAYOUT_STEREO_DOWNMIX
 
+        av_log(NULL, AV_LOG_FATAL, b"2");
         wanted_nb_channels = av_get_channel_layout_nb_channels(wanted_channel_layout)
         wanted_spec.channels = wanted_nb_channels
         wanted_spec.freq = wanted_sample_rate
         if wanted_spec.freq <= 0 or wanted_spec.channels <= 0:
-            if self.player.loglevel >= AV_LOG_ERROR:
-                av_log(NULL, AV_LOG_ERROR, b"Invalid sample rate or channel count!\n")
+            av_log(NULL, AV_LOG_FATAL, b"Invalid sample rate or channel count!\n")
             return -1
 
+        av_log(NULL, AV_LOG_FATAL, b"3");
         while next_sample_rate_idx and next_sample_rates[next_sample_rate_idx] >= wanted_spec.freq:
             next_sample_rate_idx -= 1
 
@@ -1660,11 +1662,13 @@ cdef class VideoState(object):
 
             error = self.open_audio_device(&wanted_spec, &spec)
 
+        av_log(NULL, AV_LOG_FATAL, b"4");
         if spec.format != AUDIO_S16SYS:
             av_log(NULL, AV_LOG_FATAL,
                b"SDL advised audio format %d is not supported!\n", spec.format)
             return -1
 
+        av_log(NULL, AV_LOG_FATAL, b"5");
         if spec.channels != wanted_spec.channels:
             wanted_channel_layout = av_get_default_channel_layout(spec.channels)
             if not wanted_channel_layout:
@@ -1676,6 +1680,7 @@ cdef class VideoState(object):
         audio_hw_params.freq = spec.freq
         audio_hw_params.channel_layout = wanted_channel_layout
         audio_hw_params.channels =  spec.channels
+        av_log(NULL, AV_LOG_FATAL, b"6");
         audio_hw_params.frame_size = av_samples_get_buffer_size(
             NULL, audio_hw_params.channels, 1, audio_hw_params.fmt, 1)
         audio_hw_params.bytes_per_sec = av_samples_get_buffer_size(
@@ -1685,14 +1690,13 @@ cdef class VideoState(object):
         av_log(NULL, AV_LOG_FATAL, b"Frame size: %d", audio_hw_params.frame_size);
         av_log(NULL, AV_LOG_FATAL, b"Less than 0: %d", audio_hw_params.bytes_per_sec <= 0);
         if audio_hw_params.bytes_per_sec <= 0 or audio_hw_params.frame_size <= 0:
-            if self.player.loglevel >= AV_LOG_ERROR:
-                av_log(NULL, AV_LOG_ERROR, b"av_samples_get_buffer_size failed\n")
+            av_log(NULL, AV_LOG_FATAL, b"av_samples_get_buffer_size failed\n")
             return -1
-        if self.player.loglevel >= AV_LOG_DEBUG:
-            av_log(NULL, AV_LOG_DEBUG,
-               b"openaudio with fmt=%u freq=%u channel_layout=%u channels=%hhu\n",
-               audio_hw_params.fmt, audio_hw_params.freq,
-               audio_hw_params.channel_layout, audio_hw_params.channels)
+
+        av_log(NULL, AV_LOG_FATAL,
+           b"openaudio with fmt=%u freq=%u channel_layout=%u channels=%hhu\n",
+           audio_hw_params.fmt, audio_hw_params.freq,
+           audio_hw_params.channel_layout, audio_hw_params.channels)
 
         return spec.size
 
