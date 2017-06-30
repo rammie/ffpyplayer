@@ -1793,6 +1793,7 @@ cdef class VideoState(object):
             # prepare audio output
             ret = self.audio_open(channel_layout, nb_channels, sample_rate, &self.audio_tgt)
             printf(b"Return value of audio_open: %d", ret)
+            printf(b"Bytes per sec: %d", self.audio_tgt.bytes_per_sec)
             if ret < 0:
                 av_dict_free(&opts)
                 return ret
@@ -1806,7 +1807,9 @@ cdef class VideoState(object):
             self.audio_diff_avg_count = 0
             ''' since we do not have a precise anough audio fifo fullness,
             we correct audio sync only if larger than this threshold '''
-            self.audio_diff_threshold = (<double>self.audio_hw_buf_size) / (self.audio_tgt.bytes_per_sec + 0.001)
+            printf(b"Bytes per sec: %d", self.audio_tgt.bytes_per_sec)
+            # self.audio_diff_threshold = (<double>self.audio_hw_buf_size) / self.audio_tgt.bytes_per_sec
+            self.audio_diff_threshold = (<double>self.audio_hw_buf_size) / 4
 
             self.audio_stream = stream_index
             self.audio_st = ic.streams[stream_index]
