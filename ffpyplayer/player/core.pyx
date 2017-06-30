@@ -1806,7 +1806,7 @@ cdef class VideoState(object):
             self.audio_diff_avg_count = 0
             ''' since we do not have a precise anough audio fifo fullness,
             we correct audio sync only if larger than this threshold '''
-            self.audio_diff_threshold = (<double>self.audio_hw_buf_size) / self.audio_tgt.bytes_per_sec
+            self.audio_diff_threshold = (<double>self.audio_hw_buf_size) / (self.audio_tgt.bytes_per_sec + 0.001)
 
             self.audio_stream = stream_index
             self.audio_st = ic.streams[stream_index]
