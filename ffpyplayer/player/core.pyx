@@ -1686,6 +1686,7 @@ cdef class VideoState(object):
             NULL, audio_hw_params.channels, audio_hw_params.freq, audio_hw_params.fmt, 1)
 
         printf(b"Bytes per sec: %d", audio_hw_params.bytes_per_sec)
+        av_log(NULL, AV_LOG_FATAL, b"Bytes per sec: %d", audio_hw_params.bytes_per_sec);
         if audio_hw_params.bytes_per_sec <= 0 or audio_hw_params.frame_size <= 0:
             if self.player.loglevel >= AV_LOG_ERROR:
                 av_log(NULL, AV_LOG_ERROR, b"av_samples_get_buffer_size failed\n")
@@ -1808,6 +1809,7 @@ cdef class VideoState(object):
             ''' since we do not have a precise anough audio fifo fullness,
             we correct audio sync only if larger than this threshold '''
             printf(b"Bytes per sec: %d", self.audio_tgt.bytes_per_sec)
+            av_log(NULL, AV_LOG_FATAL, b"Bytes per sec: %d", self.audio_tgt.bytes_per_sec);
             # self.audio_diff_threshold = (<double>self.audio_hw_buf_size) / self.audio_tgt.bytes_per_sec
             self.audio_diff_threshold = (<double>self.audio_hw_buf_size) / 4
 
