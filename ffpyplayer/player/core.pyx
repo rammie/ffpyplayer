@@ -1684,7 +1684,7 @@ cdef class VideoState(object):
         audio_hw_params.bytes_per_sec = av_samples_get_buffer_size(
             NULL, audio_hw_params.channels, audio_hw_params.freq, audio_hw_params.fmt, 1)
 
-        print "Bytes per sec:", audio_hw_params.bytes_per_sec
+        printf(b"Bytes per sec: %d", audio_hw_params.bytes_per_sec)
         if audio_hw_params.bytes_per_sec <= 0 or audio_hw_params.frame_size <= 0:
             if self.player.loglevel >= AV_LOG_ERROR:
                 av_log(NULL, AV_LOG_ERROR, b"av_samples_get_buffer_size failed\n")
@@ -1791,7 +1791,7 @@ cdef class VideoState(object):
 
             # prepare audio output
             ret = self.audio_open(channel_layout, nb_channels, sample_rate, &self.audio_tgt)
-            print "Return value of audio_open:", ret
+            printf(b"Return value of audio_open: %d", audio_hw_params.bytes_per_sec)
             if ret < 0:
                 av_dict_free(&opts)
                 return ret
