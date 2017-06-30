@@ -1791,7 +1791,7 @@ cdef class VideoState(object):
 
             # prepare audio output
             ret = self.audio_open(channel_layout, nb_channels, sample_rate, &self.audio_tgt)
-            printf(b"Return value of audio_open: %d", <int>ret)
+            # printf(b"Return value of audio_open: %d", <int>ret)
             if ret < 0:
                 av_dict_free(&opts)
                 return ret
