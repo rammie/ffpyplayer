@@ -1644,9 +1644,8 @@ cdef class VideoState(object):
 
         error = self.open_audio_device(&wanted_spec, &spec)
         while error:
-            if self.player.loglevel >= AV_LOG_WARNING:
-                av_log(NULL, AV_LOG_WARNING, b"SDL_OpenAudio (%d channels, %d Hz): %s\n",
-                    wanted_spec.channels, wanted_spec.freq, SDL_GetError())
+            av_log(NULL, AV_LOG_FATAL, b"SDL_OpenAudio (%d channels, %d Hz): %s\n",
+                wanted_spec.channels, wanted_spec.freq, SDL_GetError())
 
             wanted_spec.channels = next_nb_channels[FFMIN(7, wanted_spec.channels)]
             if not wanted_spec.channels:
@@ -1654,26 +1653,23 @@ cdef class VideoState(object):
                 next_sample_rate_idx -= 1
                 wanted_spec.channels = wanted_nb_channels
                 if not wanted_spec.freq:
-                    if self.player.loglevel >= AV_LOG_ERROR:
-                        av_log(NULL, AV_LOG_ERROR,
-                           b"No more channel combinations to try, audio open failed\n")
+                    av_log(NULL, AV_LOG_FATAL,
+                       b"No more channel combinations to try, audio open failed\n")
                     return -1
             wanted_channel_layout = av_get_default_channel_layout(wanted_spec.channels)
 
             error = self.open_audio_device(&wanted_spec, &spec)
 
         if spec.format != AUDIO_S16SYS:
-            if self.player.loglevel >= AV_LOG_ERROR:
-                av_log(NULL, AV_LOG_ERROR,
-                   b"SDL advised audio format %d is not supported!\n", spec.format)
+            av_log(NULL, AV_LOG_FATAL,
+               b"SDL advised audio format %d is not supported!\n", spec.format)
             return -1
 
         if spec.channels != wanted_spec.channels:
             wanted_channel_layout = av_get_default_channel_layout(spec.channels)
             if not wanted_channel_layout:
-                if self.player.loglevel >= AV_LOG_ERROR:
-                    av_log(NULL, AV_LOG_ERROR,
-                       b"SDL advised channel count %d is not supported!\n", spec.channels)
+                av_log(NULL, AV_LOG_FATAL,
+                   b"SDL advised channel count %d is not supported!\n", spec.channels)
                 return -1
 
         audio_hw_params.fmt = AV_SAMPLE_FMT_S16
