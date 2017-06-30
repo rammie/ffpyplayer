@@ -47,6 +47,7 @@ cdef extern from "errno.h" nogil:
 
 cdef extern from "stdio.h" nogil:
     int snprintf(char *, size_t, const char *, ... )
+    int printf(const char *, ... )
 
 cdef extern from "stdlib.h" nogil:
     int atoi(const char *)
@@ -1684,7 +1685,7 @@ cdef class VideoState(object):
         audio_hw_params.bytes_per_sec = av_samples_get_buffer_size(
             NULL, audio_hw_params.channels, audio_hw_params.freq, audio_hw_params.fmt, 1)
 
-        snprintf(b"Bytes per sec: %d", audio_hw_params.bytes_per_sec)
+        printf(b"Bytes per sec: %d", audio_hw_params.bytes_per_sec)
         if audio_hw_params.bytes_per_sec <= 0 or audio_hw_params.frame_size <= 0:
             if self.player.loglevel >= AV_LOG_ERROR:
                 av_log(NULL, AV_LOG_ERROR, b"av_samples_get_buffer_size failed\n")
@@ -1791,7 +1792,7 @@ cdef class VideoState(object):
 
             # prepare audio output
             ret = self.audio_open(channel_layout, nb_channels, sample_rate, &self.audio_tgt)
-            snprintf(b"Return value of audio_open: %d", ret)
+            printf(b"Return value of audio_open: %d", ret)
             if ret < 0:
                 av_dict_free(&opts)
                 return ret
