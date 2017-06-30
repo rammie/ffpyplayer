@@ -1685,8 +1685,9 @@ cdef class VideoState(object):
         audio_hw_params.bytes_per_sec = av_samples_get_buffer_size(
             NULL, audio_hw_params.channels, audio_hw_params.freq, audio_hw_params.fmt, 1)
 
-        printf(b"Bytes per sec: %d", audio_hw_params.bytes_per_sec)
         av_log(NULL, AV_LOG_FATAL, b"Bytes per sec: %d", audio_hw_params.bytes_per_sec);
+        av_log(NULL, AV_LOG_FATAL, b"Frame size: %d", audio_hw_params.frame_size);
+        av_log(NULL, AV_LOG_FATAL, b"Less than 0: %d", audio_hw_params.bytes_per_sec <= 0);
         if audio_hw_params.bytes_per_sec <= 0 or audio_hw_params.frame_size <= 0:
             if self.player.loglevel >= AV_LOG_ERROR:
                 av_log(NULL, AV_LOG_ERROR, b"av_samples_get_buffer_size failed\n")
