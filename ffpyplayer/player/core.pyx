@@ -1616,6 +1616,7 @@ cdef class VideoState(object):
         cdef int error
         cdef int next_sample_rate_idx = next_sample_rates_len - 1
 
+        print "*******************************************"
         env = SDL_getenv(b"SDL_AUDIO_CHANNELS")
         if env != NULL:
             wanted_nb_channels = atoi(env)
