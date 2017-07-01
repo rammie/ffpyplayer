@@ -1648,6 +1648,7 @@ cdef class VideoState(object):
 
         av_log(NULL, AV_LOG_FATAL, b"3.3");
         error = self.open_audio_device(&wanted_spec, &spec)
+        av_log(NULL, AV_LOG_FATAL, b"3.4");
         while error:
             av_log(NULL, AV_LOG_FATAL, b"SDL_OpenAudio (%d channels, %d Hz): %s\n",
                 wanted_spec.channels, wanted_spec.freq, SDL_GetError())

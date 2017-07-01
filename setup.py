@@ -125,6 +125,7 @@ include_dirs = []
 if "KIVYIOSROOT" in environ:
     # enable kivy-ios compilation
     include_dirs = [
+        environ.get("SDL_MIXER_INCLUDE_DIR"),
         environ.get("SDL_INCLUDE_DIR"),
         environ.get("FFMPEG_INCLUDE_DIR")]
     sdl = "SDL2"
