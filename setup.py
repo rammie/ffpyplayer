@@ -152,6 +152,11 @@ elif "NDKPLATFORM" in environ:
                  'm',
                  sdl]
 
+    sdl2_mixer = environ.get("SDL_MIXER_INCLUDE_DIR")
+    if sdl2_mixer:
+        include_dirs.append(sdl2_mixer)
+        libraries.append("SDL2_mixer")
+
 else:
 
     # ffmpeg
