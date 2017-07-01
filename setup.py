@@ -143,11 +143,13 @@ elif "NDKPLATFORM" in environ:
         include_dirs = [ffmpeg_include]
         if sdl_include:
             include_dirs.append(sdl_include)
-            include_dirs.append(environ.get("SDL_MIXER_INCLUDE_DIR"))
         sdl = "sdl"
     else:
         library_dirs = [ffmpeg_lib, sdl_lib]
         include_dirs = [ffmpeg_include, sdl_include]
+        sdl2_mixer = environ.get("SDL_MIXER_INCLUDE_DIR")
+        if sdl2_mixer:
+            include_dirs.append(sdl2_mixer)
         sdl = "SDL2"
     libraries = ['avcodec', 'avdevice', 'avfilter', 'avformat',
                  'avutil', 'swscale', 'swresample', 'postproc',
