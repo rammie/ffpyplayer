@@ -1638,12 +1638,15 @@ cdef class VideoState(object):
         while next_sample_rate_idx and next_sample_rates[next_sample_rate_idx] >= wanted_spec.freq:
             next_sample_rate_idx -= 1
 
+        av_log(NULL, AV_LOG_FATAL, b"3.1");
         wanted_spec.format = AUDIO_S16SYS
         wanted_spec.silence = 0
         wanted_spec.samples = FFMAX(AUDIO_MIN_BUFFER_SIZE, 2 << av_log2(wanted_spec.freq / AUDIO_MAX_CALLBACKS_PER_SEC))
+        av_log(NULL, AV_LOG_FATAL, b"3.2");
         wanted_spec.callback = <void (*)(void *, uint8_t *, int) nogil>self.sdl_audio_callback
         wanted_spec.userdata = self.self_id
 
+        av_log(NULL, AV_LOG_FATAL, b"3.3");
         error = self.open_audio_device(&wanted_spec, &spec)
         while error:
             av_log(NULL, AV_LOG_FATAL, b"SDL_OpenAudio (%d channels, %d Hz): %s\n",
